@@ -414,12 +414,7 @@ if needs_rebuild; then
 fi
 
 # --- Container name ---
-if [[ $OPT_STATELESS -eq 1 ]]; then
-    CONTAINER_NAME="claude-sandbox-stateless-$$"
-else
-    DIR_HASH=$(echo -n "$PWD" | sha256sum | cut -c1-10)
-    CONTAINER_NAME="claude-sandbox-${DIR_HASH}"
-fi
+CONTAINER_NAME="claude-sandbox-$$"
 readonly CONTAINER_NAME
 verbose "Container name: $CONTAINER_NAME"
 
