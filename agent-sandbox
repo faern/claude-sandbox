@@ -138,6 +138,7 @@ The current working directory is bind-mounted into the container and is the
 only host directory accessible (read-write by default, read-only with --read-only).
 
 Options:
+  --shell       Start an interactive shell instead of the agent
   --read-only   Mount project dir read-only
   --stateless   No project dir, ephemeral container
   --rebuild     Force image rebuild
@@ -187,6 +188,7 @@ OPT_STATELESS=0
 OPT_REBUILD=0
 OPT_CLEANUP=0
 OPT_VERBOSE=0
+OPT_SHELL=0
 OPT_AGENT_SOURCE=host
 OPT_AGENT_EXPLICIT=0
 AGENT_ARGS=()
@@ -194,6 +196,7 @@ CAP_ADD_ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --shell)      OPT_SHELL=1; shift ;;
         --read-only)  OPT_READ_ONLY=1; shift ;;
         --stateless)  OPT_STATELESS=1; shift ;;
         --rebuild)    OPT_REBUILD=1; shift ;;
@@ -211,7 +214,7 @@ while [[ $# -gt 0 ]]; do
         *)            echo "Unknown option: $1" >&2; echo "Use -- to pass arguments to $AGENT_NAME." >&2; exit 1 ;;
     esac
 done
-readonly OPT_READ_ONLY OPT_STATELESS OPT_REBUILD OPT_CLEANUP OPT_VERBOSE OPT_AGENT_EXPLICIT
+readonly OPT_READ_ONLY OPT_STATELESS OPT_REBUILD OPT_CLEANUP OPT_VERBOSE OPT_SHELL OPT_AGENT_EXPLICIT
 readonly AGENT_ARGS CAP_ADD_ARGS
 
 verbose() { [[ $OPT_VERBOSE -eq 1 ]] && echo -e "${COLOR_VERBOSE}[#] $*${COLOR_RESET}" >&2 || true; }
@@ -559,5 +562,8 @@ if [[ "$OPT_AGENT_SOURCE" == "host" ]]; then
     RUN_ARGS+=(-v "$AGENT_BIN:$HOME/.local/bin/$AGENT_NAME:ro,z")
 fi
 
-verbose "podman run ${RUN_ARGS[*]} $IMAGE_TAG $AGENT_NAME ${AGENT_ARGS[*]}"
-exec podman run "${RUN_ARGS[@]}" "$IMAGE_TAG" "$AGENT_NAME" "${AGENT_ARGS[@]}"
+ENTRY_CMD="$AGENT_NAME"
+[[ $OPT_SHELL -eq 1 ]] && ENTRY_CMD="bash"
+
+verbose "podman run ${RUN_ARGS[*]} $IMAGE_TAG $ENTRY_CMD ${AGENT_ARGS[*]}"
+exec podman run "${RUN_ARGS[@]}" "$IMAGE_TAG" "$ENTRY_CMD" "${AGENT_ARGS[@]}"
