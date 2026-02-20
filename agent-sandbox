@@ -149,7 +149,9 @@ Options:
                 install: Install $AGENT_NAME into container during image build.
                 none:    Don't provide $AGENT_NAME at all. You are expected to
                          install it via the containerfile
-  --cap-add CAP Add a Linux capability (repeatable)
+  --cap-add CAP Add a Linux capability (repeatable). By default,
+                CAP_SETUID, CAP_SETGID, and CAP_DAC_READ_SEARCH are
+                already enabled (required for sudo).
   -h, --help    Show this help
 
 Arguments after -- are passed through to $AGENT_NAME.
@@ -522,8 +524,12 @@ RUN_ARGS=(
     --security-opt mask=/proc/kcore:/proc/kallsyms:/proc/config.gz:/proc/sched_debug:/proc/timer_list:/proc/self/mountinfo:/proc/1/mountinfo
     # Hide other users' processes in /proc
     --security-opt proc-opts=hidepid=2
-    # Drop all capabilities; users can re-add with --cap-add
+    # Drop all capabilities, then re-add the minimum needed for sudo.
+    # Users can add more with --cap-add.
     --cap-drop=ALL
+    --cap-add CAP_SETUID
+    --cap-add CAP_SETGID
+    --cap-add CAP_DAC_READ_SEARCH
     "${CAP_ADD_ARGS[@]}"
 )
 
