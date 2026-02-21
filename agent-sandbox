@@ -528,6 +528,8 @@ RUN_ARGS=(
     -e "${AUTOUPDATE_ENV}=1"
     # Enable websearch via EXA for OpenCode (https://opencode.ai/docs/tools#websearch)
     -e OPENCODE_ENABLE_EXA=1
+    # Enable LSP support in OpenCode (https://opencode.ai/docs/tools#lsp-experimental)
+    -e OPENCODE_EXPERIMENTAL_LSP_TOOL=true
     -e TERM=xterm-256color
     -e COLORTERM
     -w "$WORKDIR"
