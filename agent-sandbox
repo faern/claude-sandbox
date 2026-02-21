@@ -526,6 +526,8 @@ RUN_ARGS=(
     --userns="keep-id:uid=$(id -u),gid=$(id -g)"
     --label "${SANDBOX_NAME}.project-dir=$PWD"
     -e "${AUTOUPDATE_ENV}=1"
+    # Enable websearch via EXA for OpenCode (https://opencode.ai/docs/tools#websearch)
+    -e OPENCODE_ENABLE_EXA=1
     -e TERM=xterm-256color
     -e COLORTERM
     -w "$WORKDIR"
