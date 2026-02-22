@@ -34,7 +34,8 @@ set -euo pipefail
 # ===========================================================================
 
 readonly CONTAINERFILE_NAME="Containerfile.agent"
-readonly GLOBAL_CONFIG_DIR="$HOME/.config/agent-sandbox"
+readonly XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+readonly GLOBAL_CONFIG_DIR="$XDG_CONFIG_HOME/agent-sandbox"
 
 case "$(basename "$0")" in
     claude-sandbox)
@@ -80,8 +81,9 @@ prepare_agent_config() {
             fi
             ;;
         opencode)
-            if [[ -d "$HOME/.config/opencode" ]]; then
-                cp -r "$HOME/.config/opencode" "$SANDBOX_DIR/config-opencode"
+            local opencode_config_dir="$XDG_CONFIG_HOME/opencode"
+            if [[ -d "$opencode_config_dir" ]]; then
+                cp -r "$opencode_config_dir" "$SANDBOX_DIR/config-opencode"
             else
                 mkdir -p "$SANDBOX_DIR/config-opencode"
             fi
@@ -102,7 +104,7 @@ build_agent_mounts() {
             RUN_ARGS+=(-v "$SANDBOX_DIR/.claude:$HOME/.claude:rw,z")
             ;;
         opencode)
-            RUN_ARGS+=(-v "$SANDBOX_DIR/config-opencode:$HOME/.config/opencode:rw,z")
+            RUN_ARGS+=(-v "$SANDBOX_DIR/config-opencode:$XDG_CONFIG_HOME/opencode:rw,z")
             RUN_ARGS+=(-v "$SANDBOX_DIR/share-opencode:$HOME/.local/share/opencode:rw,z")
             ;;
     esac
