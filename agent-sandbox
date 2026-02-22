@@ -33,12 +33,14 @@ set -euo pipefail
 # Agent dispatch — set tool-specific config based on how the script was invoked
 # ===========================================================================
 
+readonly CONTAINERFILE_NAME="Containerfile.agent"
+readonly GLOBAL_CONFIG_DIR="$HOME/.config/agent-sandbox"
+
 case "$(basename "$0")" in
     claude-sandbox)
         AGENT_NAME="claude"
         AGENT_DISPLAY_NAME="Claude Code"
         SANDBOX_NAME="claude-sandbox"
-        CONTAINERFILE_NAME="Containerfile.claude"
         AUTOUPDATE_ENV="DISABLE_AUTOUPDATER"
         INSTALL_URL="https://claude.ai/install.sh"
         ENV_PATTERN='^ANTHROPIC_'
@@ -49,7 +51,6 @@ case "$(basename "$0")" in
         AGENT_NAME="opencode"
         AGENT_DISPLAY_NAME="OpenCode"
         SANDBOX_NAME="opencode-sandbox"
-        CONTAINERFILE_NAME="Containerfile.opencode"
         AUTOUPDATE_ENV="OPENCODE_DISABLE_AUTOUPDATE"
         INSTALL_URL="https://opencode.ai/install"
         ENV_PATTERN='^(ANTHROPIC_|OPENAI_|GEMINI_|GROQ_|AWS_|AZURE_|OPENCODE_|GOOGLE_|GITLAB_|CLOUDFLARE_)'
@@ -120,7 +121,6 @@ readonly COLOR_VERBOSE="\033[33m"
 readonly COLOR_DEEMPHASIZE="\033[2m"
 readonly COLOR_RESET="\033[0m"
 
-readonly GLOBAL_CONFIG_DIR="$HOME/.config/$SANDBOX_NAME"
 
 # Project Containerfile: replaces default containerfile (must include FROM).
 # Project overrides global (no concatenation).
