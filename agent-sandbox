@@ -579,4 +579,4 @@ ENTRY_CMD="$AGENT_NAME"
 [[ $OPT_SHELL -eq 1 ]] && ENTRY_CMD="bash"
 
 verbose "podman run ${RUN_ARGS[*]} $IMAGE_TAG $ENTRY_CMD ${AGENT_ARGS[*]}"
-exec podman run "${RUN_ARGS[@]}" "$IMAGE_TAG" "$ENTRY_CMD" "${AGENT_ARGS[@]}"
+podman run "${RUN_ARGS[@]}" "$IMAGE_TAG" "$ENTRY_CMD" "${AGENT_ARGS[@]}"
