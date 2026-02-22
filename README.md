@@ -24,7 +24,7 @@ project (working directory).
 
 `agent-sandbox` is a single script. It is invoked via symlinks named `claude-sandbox` and
 `opencode-sandbox`. The script detects which agent to use based on the name it was invoked as.
-Each agent gets its own containerfile name, config paths, environment variables, and install method.
+Each agent gets its own config paths, environment variables, and install method.
 
 ## Agent binary
 
@@ -103,7 +103,7 @@ claude-sandbox --agent install
 # Skip host binary mount (use when containerfile installs the agent)
 claude-sandbox --agent none
 
-# Pass --dangerously-skip-permissions to Claude Code (bypasses permission checks)
+# Skip agent permission prompts (claude-sandbox only)
 claude-sandbox --yolo
 
 # Verbose output from the sandbox setup
