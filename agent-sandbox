@@ -360,6 +360,8 @@ RUN existing_user=\$(awk -F: '\$3 == "${user_uid}" {print \$1}' /etc/passwd) \\
     && [ -n "\$existing_group" ] && groupdel "\$existing_group" 2>/dev/null || true \\
     ; groupadd --gid ${user_gid} ${username} \\
     && useradd --uid ${user_uid} --gid ${user_gid} --home-dir ${user_home} -m ${username}
+
+ENV EDITOR=vim
 POSTFROM_EOF
     )
 
@@ -398,7 +400,7 @@ RUN <<EOF
   # Build tools and linters
   apt-get install -y --no-install-recommends build-essential clang shellcheck
   # Search, text processing, and utilities
-  apt-get install -y --no-install-recommends ripgrep jq yq xxd fd-find cloc bc
+  apt-get install -y --no-install-recommends ripgrep jq yq xxd fd-find cloc bc vim
   # Conversion/parsing of PDF/html and similar document types
   apt-get install -y --no-install-recommends poppler-utils pandoc
   # Networking
